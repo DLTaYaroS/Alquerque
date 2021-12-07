@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyLibraryContract\MyLibraryContract.csproj" />
-    <ProjectReference Include="..\MyLibrary\MyLibrary.csproj" />
+    <ProjectReference Include="..\AlquerqueContract\AlquerqueContractAlquerque.csproj" />
+    <ProjectReference Include="..\Alquerque\AlquerqueAlquerque.csproj" />
   </ItemGroup>
 
   <ItemGroup>

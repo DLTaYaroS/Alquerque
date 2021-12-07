@@ -3,7 +3,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MyLibrary.User.Authorization
+namespace Alquerque.User.Authorization
 {
     public static class PasswordHash
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace MyLibraryContract.Users
+namespace AlquerqueContract.Users
 {
     public class UserInfo
     {

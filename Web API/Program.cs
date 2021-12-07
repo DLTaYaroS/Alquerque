@@ -4,16 +4,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Alquerque.API.Controllers;
 using System.Threading.Tasks;
 
-namespace Web_API
+namespace Alquerque.API
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
+            //UserLogController controller = new UserLogController();
+            //controller.
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

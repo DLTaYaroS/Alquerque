@@ -1,7 +1,7 @@
 ﻿using System;
-namespace MyLibraryContract.Users
+namespace AlquerqueContract.Users
 {
-    public class UserAuthorization
+    public class LoginModel
     {
         public int Id { get; set; }
         public string Login { get; set; }

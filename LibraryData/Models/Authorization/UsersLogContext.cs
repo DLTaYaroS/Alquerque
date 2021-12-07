@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyLibraryContract.Users;
-using MyLibraryDataAccess;
-namespace MyLibraryDataAccess.Models.Authorization
+using AlquerqueContract.Users;
+using AlquerqueDataAccess;
+namespace AlquerqueDataAccess.Models.Authorization
 {
     public class UsersLogContext : DbContext
     {
-        public DbSet<UserAuthorization> UsersLog { get; set; }
-        public UsersLogContext(DbContextOptions<UsersLogContext> options)
-            : base(options)
+        public DbSet<LoginModel> UsersLog { get; set; }
+        public UsersLogContext()
         {
             Database.EnsureCreated();
         }

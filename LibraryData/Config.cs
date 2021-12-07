@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyLibraryDataAccess
+namespace AlquerqueDataAccess
 {
     public static class Config
     {
-        public static readonly string ConnectionString = "Server=(localdb)\\mssqllocaldb;Database=MyLibrary;Trusted_Connection=True;";
+        public static readonly string ConnectionString = "Server=(localdb)\\mssqllocaldb;Database=Alquerque;Trusted_Connection=True;";
     }
 }

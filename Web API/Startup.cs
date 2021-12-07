@@ -14,7 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace Web_API
+namespace Alquerque.API
 {
     public class Startup
     {
@@ -28,12 +28,12 @@ namespace Web_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string con = "Server=(localdb)\\mssqllocaldb;Database=usersdbstore;Trusted_Connection=True;";
+            //string con = "Server=(localdb)\\mssqllocaldb;Database=usersdbstore;Trusted_Connection=True;";
           
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web_API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alquerque.API", Version = "v1" });
             });
         }
 
@@ -44,7 +44,7 @@ namespace Web_API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web_API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Alquerque.API v1"));
             }
 
             app.UseHttpsRedirection();
