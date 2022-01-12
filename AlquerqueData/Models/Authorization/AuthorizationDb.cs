@@ -1,4 +1,5 @@
 ﻿using AlquerqueContract.Users;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace AlquerqueDataAccess.Models.Authorization
 {
     public class AuthorizationDb
     {
-        private UsersLogContext db;
+        private AccountContext db;
         public AuthorizationDb()
         {
-            db = new UsersLogContext();
+            db = new AccountContext();
         }
         public async Task SaveNewUser(LoginModel user)
         {
@@ -35,6 +36,10 @@ namespace AlquerqueDataAccess.Models.Authorization
         {
             var user = db.UserLoginModel.First(u => u.Id.Equals(id));
             return user;
+        }
+        public IEnumerable<LoginModel> GetUsers()
+        {
+            return db.UserLoginModel.ToList();
         }
         public LoginModel GetUser(string login)
         {

@@ -16,6 +16,7 @@ namespace Alquerque.API
             CreateHostBuilder(args).Build().Run();
             //UserLogController controller = new UserLogController();
             //controller.
+           
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -24,5 +25,7 @@ namespace Alquerque.API
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        
     }
 }
