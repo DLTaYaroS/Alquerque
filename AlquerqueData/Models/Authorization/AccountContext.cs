@@ -3,10 +3,10 @@ using AlquerqueContract.Users;
 using AlquerqueDataAccess;
 namespace AlquerqueDataAccess.Models.Authorization
 {
-    public class UsersLogContext : DbContext
-    {
+    public class AccountContext : DbContext
+    { 
         public DbSet<LoginModel> UserLoginModel { get; set; }
-        public UsersLogContext()
+        public AccountContext()
         {
             Database.EnsureCreated();
         }
