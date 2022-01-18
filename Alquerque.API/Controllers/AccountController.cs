@@ -6,42 +6,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using Alquerque.User.Authorization;
 using AlquerqueContract.Users;
+using AlquerqueDataAccess.Entitys.Person;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Alquerque.API.Controllers
 {
-    [Route("api/users")]
+    
     [ApiController]
     public class AccountController : Controller
     {
-        //private readonly UserManager<LoginModel> _userManager;
-        //private readonly SignInManager<LoginModel> _signInManager;
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Person>> Get(int id)
+        //{
+        //    DataUser db = new DataUser();
+        //    Person user = db.Get(id);
+        //    if (user == null)
+        //        return NotFound();
+        //    return new ObjectResult(user);
 
-        //public AccountController(UserManager<LoginModel> userManager, SignInManager<LoginModel> signInManager)
-        //{
-        //    _userManager = userManager;
-        //    _signInManager = signInManager;
         //}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LoginModel>> Get(int id)
-        {
-            DataUser db = new DataUser();
-            LoginModel user = db.Get(id);
-            if (user == null)
-                return NotFound();
-            return new ObjectResult(user);
-            
-        }
-        [HttpGet]
-        public ActionResult<IEnumerable<LoginModel>> Get()
-        {
-            DataUser db = new DataUser();
-            return db.GetAll().ToList();
-        }
         //[HttpGet]
-        //public IActionResult Register()
+        //public ActionResult<IEnumerable<Person>> Get()
         //{
-        //    return View();
+        //    DataUser db = new DataUser();
+        //    return db.GetAll().ToList();
         //}
+
         //[HttpPost]
         //public async Task<IActionResult> Register(LoginModel model)
         //{
@@ -66,48 +58,106 @@ namespace Alquerque.API.Controllers
         //    }
         //    return View(model);
         //}
-        [HttpPost("Registration")]
-        public async Task<ActionResult<LoginModel>> Registration(LoginModel user)
+        //[HttpPost("Registration")]
+        //public async Task<ActionResult<LoginModel>> Registration(LoginModel user)
+        //{
+        //    if (user == null)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    Authorization auth = new Authorization();
+        //    try
+        //    {
+        //        await auth.NewUser(user);
+        //        return Ok("Succesfully registration");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //    }
+
+        //}
+        //[HttpPost("Authorization")]
+        //public async Task<ActionResult<string>> Authorization(LoginModel user)
+        //{
+        //    if (user == null)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    Authorization auth = new Authorization();
+        //    try
+        //    {
+        //        if (auth.LogInAccount(user)!=null)
+        //        {
+        //            return Ok("Succesfully authorization");
+        //        }
+        //        return Ok("UnSuccesfully authorization");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //    }
+
+        //}
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult<string>> Delete(int id)
+        //{
+        //    Authorization auth = new Authorization();
+        //    //check role
+        //    await auth.DeleteUser(id);
+        //    return Ok("Delete");
+        //}
+        [HttpPost("/token")]
+        public IActionResult Token(LoginModel model)
         {
-            if (user == null)
+            var identity = GetIdentity(model);
+            if (identity == null)
             {
-                return BadRequest();
+                return BadRequest(new { errorText = "Invalid username or password." });
             }
 
-            Authorization auth = new Authorization();
-            try
-            {
-                await auth.NewUser(user);
-                return Ok("Succesfully registration");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            var now = DateTime.UtcNow;
+    
+            var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    notBefore: now,
+                    claims: identity.Claims,
+                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
+            var response = new
+            {
+                access_token = encodedJwt,
+                username = identity.Name
+            };
+
+            return Json(response);
         }
-        [HttpPost("Authorization")]
-        public async Task<ActionResult<string>> Authorization(LoginModel user)
+
+        private ClaimsIdentity GetIdentity( LoginModel model)
         {
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
             Authorization auth = new Authorization();
-            try
+
+            Person person = auth.LogInAccount(model);
+            if (person != null)
             {
-                if (auth.LogInAccount(user))
+                var claims = new List<Claim>
                 {
-                    return Ok("Succesfully authorization");
-                }
-                return Ok("UnSuccesfully authorization");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, person.Login),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, person.RoleId.ToString())
+                };
+                ClaimsIdentity claimsIdentity =
+                new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
+                    ClaimsIdentity.DefaultRoleClaimType);
+                return claimsIdentity;
             }
 
+         
+            return null;
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AlquerqueContract.Users;
 using AlquerqueDataAccess;
+using AlquerqueDataAccess.Entitys.Person;
+
 namespace AlquerqueDataAccess.Models.Authorization
 {
     public class AccountContext : DbContext
     { 
-        public DbSet<LoginModel> UserLoginModel { get; set; }
+        public DbSet<Person> UserLoginModel { get; set; }
         public AccountContext()
         {
             Database.EnsureCreated();

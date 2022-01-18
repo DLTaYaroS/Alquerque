@@ -1,4 +1,5 @@
 ﻿using AlquerqueContract.Users;
+using AlquerqueDataAccess.Entitys.Person;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,14 @@ namespace AlquerqueDataAccess.Models.Authorization
         {
             db = new AccountContext();
         }
-        public async Task SaveNewUser(LoginModel user)
+        public async Task SaveNewUser(Person user)
         {
             db.UserLoginModel.Add(user);
+            await db.SaveChangesAsync();
+        }
+        public async Task DeleteUser(Person user)
+        {
+            db.UserLoginModel.Remove(user);
             await db.SaveChangesAsync();
         }
         public string GetPassword(string login)
@@ -32,16 +38,21 @@ namespace AlquerqueDataAccess.Models.Authorization
                 return false;
             return true;
         }
-        public LoginModel GetUser(int id)
+        public Person GetUser(int id)
         {
-            var user = db.UserLoginModel.First(u => u.Id.Equals(id));
+            var user = db.UserLoginModel.FirstOrDefault(u => u.Id.Equals(id));
+            if (user == null)
+            {
+                throw new Exception("User doesn`t exist");
+            }
             return user;
         }
-        public IEnumerable<LoginModel> GetUsers()
+
+        public IEnumerable<Person> GetUsers()
         {
             return db.UserLoginModel.ToList();
         }
-        public LoginModel GetUser(string login)
+        public Person GetUser(string login)
         {
             var user = db.UserLoginModel.First(u => u.Login.Equals(login));
             return user;
